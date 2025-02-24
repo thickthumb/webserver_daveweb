@@ -1,0 +1,34 @@
+# stages:
+#   - deploy
+
+# # This job deploys the static site to Azure Blob Storage
+# deploy_to_azure:
+#   stage: deploy
+#   image: mcr.microsoft.com/azure-cli:latest  # Use the Azure CLI Docker image
+#   script:
+#     - az storage blob upload-batch \
+#         --account-name $AZURE_STORAGE_ACCOUNT \
+#         --account-key $AZURE_STORAGE_KEY \
+#         --source . \  
+#         --destination "$web" \
+#         --overwrite
+#   only:
+#     - main  # Run this job only on pushes to the 'main' branch
+
+
+stages:
+  - deploy
+
+# This job deploys the static site to Azure Blob Storage
+deploy_to_azure:
+  stage: deploy
+  image: mcr.microsoft.com/azure-cli:latest  # Use the Azure CLI Docker image
+  script:
+    - az storage blob upload-batch
+      --account-name $AZURE_STORAGE_ACCOUNT
+      --account-key $AZURE_STORAGE_KEY
+      --source .
+      --destination \appservicecontainer001
+      --overwrite
+  only:
+    - main  # Run this job only on pushes to the 'main' branch
