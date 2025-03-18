@@ -1,4 +1,4 @@
-name: Build & Push Go Webserver with Docker Compose
+name: Build & Push Go Webserver with Docker
 
 on:
   push:
