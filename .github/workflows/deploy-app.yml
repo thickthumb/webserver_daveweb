@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main  # Trigger on changes to the main branch
+      - feature1_fix
 
 jobs:
   build-and-push:
@@ -34,9 +35,10 @@ jobs:
 
       - name: Build and Push Docker Image using Docker Compose
         run: |
-          docker compose build
+          # docker compose build
+          docker build -t devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
           docker tag devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
-          docker compose push
+          # docker compose push
           docker push devdave90/portfolio:$IMAGE_TAG
 
       - name: Send Slack Notification on Success
