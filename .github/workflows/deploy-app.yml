@@ -1,9 +1,9 @@
-name: Build & Push Go Webserver with Docker
+name: Build & Push Go Webserver with Docker Compose
 
 on:
   push:
     branches:
-      - main  # Triggers when changes are pushed to the main branch
+      - main  # Trigger on changes to the main branch
 
 jobs:
   build-and-push:
@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -22,14 +27,28 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set Image Version
+        run: |
+          TAG=$(date +%Y%m%d)-${{ github.sha }}
+          echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
+
       - name: Build and Push Docker Image using Docker Compose
         run: |
-          docker-compose build
-          docker-compose push
+          docker compose build
+          docker tag devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
+          docker compose push
+          docker push mydockerhubuser/go-webserver:$IMAGE_TAG
+
+      - name: Send Slack Notification on Success
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "🚀 Deployment Successful! New Docker Image: `mydockerhubuser/go-webserver:$IMAGE_TAG`"
+          SLACK_COLOR: "#36a64f"
 
       - name: Logout from Docker Hub
         run: docker logout
-
 
 
 
