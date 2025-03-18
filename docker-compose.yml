@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .   # Uses the current directory
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"  # Maps port 8080 of the container to 8080 on the host
+    environment:
+      - PORT=8080
+    restart: always  # Ensures the container restarts on failure
