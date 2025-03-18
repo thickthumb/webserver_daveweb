@@ -2,11 +2,8 @@ version: '3.8'
 
 services:
   web:
-    build:
-      context: .   # Uses the current directory
-      dockerfile: Dockerfile
+    build: .
+    image: devdave90/portfolio:latest  # Replace with your Docker Hub username
     ports:
-      - "8080:8080"  # Maps port 8080 of the container to 8080 on the host
-    environment:
-      - PORT=8080
-    restart: always  # Ensures the container restarts on failure
+      - "8080:8080"
+    restart: always
