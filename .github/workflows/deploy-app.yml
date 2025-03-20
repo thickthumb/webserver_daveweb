@@ -33,12 +33,18 @@ jobs:
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
         
-     
+      # - name: Build and Push Docker Image with Buildx
+      #   run: |
+      #     docker buildx build \
+      #       --platform linux/amd64,linux/arm64 \
+      #       --tag mydockerhubuser/${{ env.REPO_NAME }}:latest \
+      #       --tag mydockerhubuser/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }} \
+      #       --push .
 
 
       - name: Build Docker Image using Docker 
         run: |
-          docker build -t devdave90/portfolio:$IMAGE_TAG
+          docker buildx build -t devdave90/portfolio:$IMAGE_TAG
 
       - name: Tag Docker Image using Docker
         run: |
