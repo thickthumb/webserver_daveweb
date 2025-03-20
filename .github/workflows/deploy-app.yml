@@ -14,10 +14,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+      # - name: Install Docker Compose
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y docker-compose
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -33,11 +33,28 @@ jobs:
           TAG=$(date +%Y%m%d)-${{ github.sha }}
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
-      - name: Build and Push Docker Image using Docker Compose
+        
+      # - name: Build Docker Image
+      #   run: |
+      #     docker build -t mydockerhubuser/myapp:${{ inputs.tag }} .
+
+      # - name: Push Docker Image
+      #   run: |
+      #     docker push mydockerhubuser/myapp:${{ inputs.tag }}
+
+
+      - name: Build Docker Image using Docker 
         run: |
           # docker compose build
           docker build -t devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
+
+      - name: Tag Docker Image using Docker
+        run: |
           docker tag devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
+          
+      
+      - name: Push Docker Image using Docker
+        run: |
           # docker compose push
           docker push devdave90/portfolio:$IMAGE_TAG
 
