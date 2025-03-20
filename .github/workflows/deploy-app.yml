@@ -35,12 +35,14 @@ jobs:
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
 
-      - name: Build and Push Docker Image using Docker Compose
+      - name: Build Docker Image using Docker
         run: |
           docker buildx build -t devdave90/portfolio:latest .
-          
+
+
+      - name: Push Docker Image using Docker
+        run: |
           docker tag devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
-          docker compose push
           docker push devdave90/portfolio:$IMAGE_TAG
 
 
