@@ -56,12 +56,12 @@ jobs:
       - name: 📦 Load and Tag Docker Image
         run: |
          
-          docker tag devdave90/portfolio:$IMAGE_TAG devdave90/portfolio:latest
+          # docker tag devdave90/portfolio:$IMAGE_TAG devdave90/portfolio:latest
           docker tag devdave90/portfolio:$IMAGE_TAG devdave90/portfolio:$IMAGE_TAG
 
       - name: 📤 Push Docker Image
         run: |
-          docker push mydockerhubuser/$IMAGE_NAME:latest
+          # docker push mydockerhubuser/$IMAGE_NAME:latest
           docker push devdave90/portfolio:$IMAGE_TAGMAGE_TAG
 
 
