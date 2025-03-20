@@ -38,22 +38,14 @@ jobs:
         run: |
           docker buildx build --platform linux/amd64 -t devdave90/portfolio:$IMAGE_TAG .
 
-      - name: 📁 Save Docker Image for Next Job
-        run: docker save devdave90/portfolio:$IMAGE_TAG -o image.tar
+      
 
-      - name: 🚀 Upload Image Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: docker-image
-          path: image.tar
+      
 
 
 
 
-      - name: Download Image Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-image
+      
 
       # - name: 🔑 Log in to Docker Hub
       #   uses: docker/login-action@v2
@@ -63,7 +55,7 @@ jobs:
 
       - name: 📦 Load and Tag Docker Image
         run: |
-          docker load -i image.tar
+         
           docker tag devdave90/portfolio:$IMAGE_TAG devdave90/portfolio:latest
           docker tag devdave90/portfolio:$IMAGE_TAG devdave90/portfolio:$IMAGE_TAG
 
