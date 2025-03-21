@@ -10,6 +10,6 @@ RUN go mod tidy && go build -o main
 # Create a minimal final image
 # FROM alpine:latest
 WORKDIR /app
-EXPOSE 8081
+EXPOSE 8080
 
 CMD ["./main"]
