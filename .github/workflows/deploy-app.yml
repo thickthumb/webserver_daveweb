@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main  # Trigger on changes to the main branch
-      
+      - ft-fixer
 
 jobs:
   build-and-push:
@@ -36,13 +36,13 @@ jobs:
 
       - name: Build Docker Image using Docker
         run: |
-          docker build -t devdave90/portfolio:latest .
+          docker build -t devdave90/portfolios:latest .
 
 
       - name: Push Docker Image using Docker
         run: |
-          docker tag devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
-          docker push devdave90/portfolio:$IMAGE_TAG
+          docker tag devdave90/portfolios:latest devdave90/portfolios:$IMAGE_TAG
+          docker push devdave90/portfolios:$IMAGE_TAG
 
 
       - name: Send Slack Notification on Success
@@ -50,7 +50,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_MESSAGE: "🚀 Deployment Successful! New Docker Image: `devdave90/portfolio:$IMAGE_TAG`"
+          SLACK_MESSAGE: "🚀 Deployment Successful! New Docker Image: `devdave90/portfolios:$IMAGE_TAG`"
           SLACK_COLOR: "#36a64f"
 
       - name: Logout from Docker Hub
