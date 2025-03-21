@@ -1,9 +1,0 @@
-version: '3.8'
-
-services:
-  web:
-    build: .
-    image: devdave90/portfolio:latest  # Replace with your Docker Hub username
-    ports:
-      - "8080:8080"
-    restart: always

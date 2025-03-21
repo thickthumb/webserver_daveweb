@@ -1,9 +1,10 @@
-name: Build & Push Go Webserver with Docker Compose
+name: Build & Push Go Webserver with Docker
 
 on:
   push:
     branches:
       - main  # Trigger on changes to the main branch
+      
 
 jobs:
   build-and-push:
@@ -13,10 +14,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # - name: Install Docker Compose
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y docker-compose
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v2
@@ -32,28 +33,17 @@ jobs:
           TAG=$(date +%Y%m%d)-${{ github.sha }}
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
-        
-      # - name: Build and Push Docker Image with Buildx
-      #   run: |
-      #     docker buildx build \
-      #       --platform linux/amd64,linux/arm64 \
-      #       --tag mydockerhubuser/${{ env.REPO_NAME }}:latest \
-      #       --tag mydockerhubuser/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }} \
-      #       --push .
 
-
-      - name: Build Docker Image using Docker 
+      - name: Build Docker Image using Docker
         run: |
-          docker build -t devdave90/portfolio:$IMAGE_TAG
+          docker build -t devdave90/portfolio:latest .
 
-      - name: Tag Docker Image using Docker
-        run: |
-          docker tag devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
-          
-      
+
       - name: Push Docker Image using Docker
         run: |
+          docker tag devdave90/portfolio:latest devdave90/portfolio:$IMAGE_TAG
           docker push devdave90/portfolio:$IMAGE_TAG
+
 
       - name: Send Slack Notification on Success
         if: success()
@@ -70,40 +60,23 @@ jobs:
 
 
 
-# name: Build and Push Go Webserver
+# ## AWS/Azure Container_Registry BUILD AND PUSH
+# - name:build tag and push image to ecr for service 
+#   id: build-push
+#   run: |
+#     # define ecr repo
+#     repo="${{ inputs.ECR_REGISTRY }}/ BANKEND/${{ inputs.SERVICE }}"
+#     echo "repository: $repo"
 
-# on:
-#   push:
-#     branches:
-#       - main101  # Trigger when changes are pushed to main
+#     # extract service name from service
+#     service_fu_name="$IMAGE_TAG"
 
-# jobs:
-#   build-and-push:
-#     runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
+#     #tag the image with service name and tag
+#     docker image tag "$service_full_name" "${repo}":"${{ inputs.IMAGE_TAG }}"
+#     echo "tagged image as : ${repo}:${{ inputs.IMAGE_TAG }}"
 
-#       - name: Set up Go
-#         uses: actions/setup-go@v4
-#         with:
-#           go-version: '1.21'  # Adjust to your Go version
 
-#       - name: Build Go Webserver
-#         run: |
-#           go mod tidy
-#           go build -o app .
-
-#       - name: Log in to Docker Hub
-#         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-#       - name: Build Docker Image
-#         run: |
-#           docker build -t mydockerhubuser/myapp:${{ github.sha }} .
-#           docker tag mydockerhubuser/myapp:${{ github.sha }} mydockerhubuser/myapp:latest
-
-#       - name: Push Docker Image
-#         run: |
-#           docker push mydockerhubuser/myapp:${{ github.sha }}
-#           docker push mydockerhubuser/myapp:latest
+#     #push image to ecr
+#     docker push "${repo}:${{ inputs.IMAGE_TAG }}"
+#   shell: bash
