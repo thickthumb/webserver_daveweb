@@ -30,19 +30,21 @@ jobs:
 
       - name: Set Image Version
         run: |
-          TAG=$(date +%Y%m%d)-${{ github.sha }}
+          TAG=$(date +%Y%m%d)-$(echo ${{ github.sha }} | cut -c1-5)
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
 
       - name: Build Docker Image using Docker
         run: |
-          docker build -t devdave90/portfolios:latest .
+          docker build -t devdave90/goserveer:latest .
 
 
       - name: Push Docker Image using Docker
         run: |
-          docker tag devdave90/portfolios:latest devdave90/portfolios:$IMAGE_TAG
-          docker push devdave90/portfolios:$IMAGE_TAG
+          docker tag devdave90/goserveer:latest devdave90/goserveer:$IMAGE_TAG
+          docker push devdave90/goserveer:$IMAGE_TAG
+          docker push devdave90/goserveer:latest
+
 
 
       - name: Send Slack Notification on Success
@@ -50,7 +52,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_MESSAGE: "🚀 Deployment Successful! New Docker Image: `devdave90/portfolios:$IMAGE_TAG`"
+          SLACK_MESSAGE: "🚀 Deployment Successful! New Docker Image: `devdave90/goserveer:$IMAGE_TAG`"
           SLACK_COLOR: "#36a64f"
 
       - name: Logout from Docker Hub
